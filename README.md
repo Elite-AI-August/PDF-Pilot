@@ -16,7 +16,7 @@ Segments text using AI21 API
 
 
 
-<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="300px">
+                                   <img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="300px">
 
 
 
