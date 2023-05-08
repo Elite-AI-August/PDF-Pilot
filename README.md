@@ -21,6 +21,12 @@ Segments text using AI21 API
 
 
 Flowchart
+
+
+
+
+
+
 <img src="images/Flowchart.png" alt="Flowchart" width="600px">
 
 
