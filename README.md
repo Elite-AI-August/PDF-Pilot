@@ -9,5 +9,7 @@ PDFPilot is a powerful AI-driven React web application that helps users find rel
 
 <img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="400px">
 
+<img src="images/Flowchart.png" alt="Flowchart" width="600px">
+
 
                                                             
