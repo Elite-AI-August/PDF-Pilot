@@ -1,0 +1,8 @@
+/* public/index.css */
+body {
+    background-image: url("./bg_texture.png");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+    margin: 0;
+  }
+  

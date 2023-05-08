@@ -1,0 +1,7 @@
+flask
+flask-cors
+transformers
+fitz
+PyMuPDF
+openai
+requests
