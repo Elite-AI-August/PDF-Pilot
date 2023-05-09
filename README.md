@@ -13,7 +13,7 @@ This makes it a valuable tool for businesses and organizations that work with ma
 - View the relevant text highlighted in the PDF
 
 
-<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="500px">
+<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="600px">
 
 
 ## Getting Started
