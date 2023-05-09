@@ -30,8 +30,8 @@ Follow these steps to run the HandoutAssistant web application on your local mac
 
 1. Clone the repository
 ```
-git clone https://github.com/yourusername/HandoutAssistant.git
-cd HandoutAssistant
+git clone https://github.com/admineral/PDF-Pilot
+cd PDF-Pilot
 ```
 
 2. Set up a virtual environment and install the Python dependencies
@@ -66,6 +66,10 @@ OPENAI_API_KEY=your_openai_api_key
 
 ```
 flask run --port 5001
+```
+or 
+```
+python server.py
 ```
 
 2. Start the React development server in the `client` directory:
