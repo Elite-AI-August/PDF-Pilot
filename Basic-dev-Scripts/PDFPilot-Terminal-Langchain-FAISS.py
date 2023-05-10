@@ -231,7 +231,7 @@ def main():
         print(f"Relevant Text-Segment: \n\n{segment_text}")
         print("============================================================\n\n")
 
-        PDFHandler.highlight_text(pdf_path, output_pdf, answer)
+        PDFHandler.highlight_text(pdf_path, output_pdf, segment_text)
         print(f"Highlighted PDF saved to: {output_pdf}")
     else:
         print("No relevant segment found to highlight in the PDF.\n")
