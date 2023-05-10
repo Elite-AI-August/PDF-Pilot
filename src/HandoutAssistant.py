@@ -208,8 +208,8 @@ Relevant Segments:"""
 
 
 def main():
-    pdf_path = "/Users/eliaszobler/handout.pdf"
-    output_pdf = "/Users/eliaszobler/output.pdf"
+    pdf_path = "/Users/handout.pdf"
+    output_pdf = "/Users/output.pdf"
     question = "How are the findings of the post-project evaluation documented?"
 
     handout_assistant = HandoutAssistant()
