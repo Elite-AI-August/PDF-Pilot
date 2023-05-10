@@ -1,37 +1,19 @@
-
-"""
-HandoutAssistant.py
-
-This file contains the HandoutAssistant class which is designed to process PDF handouts and answer questions based on their content. 
-
-The HandoutAssistant class is responsible for:
-
-1. Converting PDF to text.
-2. Segmenting the text using AI21 Studio's API.
-3. Loading the segmented questions.
-4. Identifying relevant segments based on user questions using Hugging Face's Transformers.
-5. Generating a prompt for OpenAI's GPT-3.
-6. Extracting answers and segment IDs from GPT-3's response.
-
-The file also contains a PDFHandler class that is responsible for highlighting relevant segments in the input PDF.
-"""
-
-
 import os
 import fitz
 import json
 import requests
-from transformers import pipeline
 import openai
 import re
+import pathlib
+import langchain
+import faiss
+from langchain.docstore.document import Document
+from langchain.embeddings.openai import OpenAIEmbeddings
 
 
-class NLP:
-    def __init__(self):
-        self.pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
-
-    def get_response(self, user_question, context):
-        return self.pipeline(question=user_question, context=context)
+#ADD API-KEYs PLEASE !!!
+os.environ["OPENAI_API_KEY"] = "YOUR-OPENAI-API-KEY-HERE"
+os.environ["AI21_API_KEY"] = "YOUR-AI21-Studio-API-KEY-HERE"
 
 
 class PDFHandler:
@@ -59,7 +41,6 @@ class PDFHandler:
                             highlight.update()
             doc.save(output_pdf)
 
-
 class AI21Segmentation:
     @staticmethod
     def segment_text(text):
@@ -80,7 +61,6 @@ class AI21Segmentation:
         else:
             print(f"An error occurred: {response.status_code}")
             return None
-
 
 class OpenAIAPI:
     def __init__(self):
@@ -109,13 +89,15 @@ class OpenAIAPI:
 
 class HandoutAssistant:
     def __init__(self):
-        self.nlp = NLP()
         self.openai_api = OpenAIAPI()
         self.current_pdf_path = None
         self.questions_data = None
+        self.embedder = OpenAIEmbeddings()
+
 
     def process_pdf(self, pdf_path):
         text, page_texts = PDFHandler.pdf_to_text(pdf_path)
+        #print(f"page_texts: {page_texts}")  # Add this line
         segmented_text = AI21Segmentation.segment_text(text)
         questions_data = self.assign_page_numbers_and_ids_to_segments(segmented_text, page_texts)
         return questions_data
@@ -126,43 +108,68 @@ class HandoutAssistant:
             segment["id"] = idx + 1
             max_overlap = 0
             max_overlap_page_number = None
+            #print(f"Segment text: {segment_text}")  # Add this line
             for page_text in page_texts:
                 overlap = len(set(segment_text.split()).intersection(set(page_text["text"].split())))
                 if overlap > max_overlap:
                     max_overlap = overlap
                     max_overlap_page_number = page_text["page_number"]
             segment["page_number"] = max_overlap_page_number + 1
+            #print(f"Element ID: {segment['id']}, Page Number: {segment['page_number']}, Max Overlap Page Text: {page_texts[max_overlap_page_number]['text']}")
             print(f"Element ID: {segment['id']}, Page Number: {segment['page_number']}")
-
         return segmented_text
 
-    def get_relevant_segments(self, questions_data, user_question):
+    def build_faiss_index(self, questions_data):
+        # Convert questions_data to a list of Documents
+        documents = [Document(page_content=q_data["segmentText"], metadata={"id": q_data["id"], "page_number": q_data["page_number"]}) for q_data in questions_data]
+
+
+        # Create the FAISS index (vector store) using the langchain.FAISS.from_documents() method
+        vector_store = langchain.FAISS.from_documents(documents, self.embedder)
+
+        return vector_store
+
+
+    def get_relevant_segments(self, questions_data, user_question, faiss_index):
+        retriever = faiss_index.as_retriever()
+        retriever.search_kwargs = {"k": 2}
+
+        docs = retriever.get_relevant_documents(user_question)
+
         relevant_segments = []
-        for question_data in questions_data:
-            context = question_data["segmentText"]
-            response = self.nlp.get_response(user_question, context)
-            if response["score"] > 0.5:
-                first_occurrence_page_number = question_data.get("page_number", 1)
+        for doc in docs:
+            segment_id = doc.metadata["id"]
+            segment = next((segment for segment in questions_data if segment["id"] == segment_id), None)
+            if segment:
                 relevant_segments.append({
-                    "id": question_data["id"],
-                    "segment_text": context,
-                    "score": response["score"],
-                    "page_number": first_occurrence_page_number
+                    "id": segment["id"],
+                    "segment_text": segment["segmentText"],
+                    "score": doc.metadata.get("score", None),
+
+                    "page_number": segment["page_number"]
                 })
-        relevant_segments.sort(key=lambda x: x["score"], reverse=True)
-        return relevant_segments[:10]
+
+        relevant_segments.sort(key=lambda x: x["score"] if x["score"] is not None else float('-inf'), reverse=True)
+
+        return relevant_segments
+
+
+
 
     def generate_prompt(self, question, relevant_segments):
-        
+
+
         prompt = f"""
 You are an AI Q&A bot. You will be given a question and a list of relevant text segments with their IDs. Please provide an accurate and concise answer based on the information provided, or indicate if you cannot answer the question with the given information. Also, please include the ID of the segment that helped you the most in your answer by writing <ID: > followed by the ID number.
 
 Question: {question}
 
 Relevant Segments:"""
-
+        print("\n\n")
         for segment in relevant_segments:
             prompt += f'\n{segment["id"]}. "{segment["segment_text"]}"'
+
+            print(f"Relevant Element ID: {segment['id']}")  # Add this line to print the relevant element IDs
         return prompt
 
     def process_pdf_and_get_answer(self, pdf_path, question):
@@ -170,16 +177,67 @@ Relevant Segments:"""
             self.current_pdf_path = pdf_path
             self.questions_data = self.process_pdf(pdf_path)
 
-        relevant_segments = self.get_relevant_segments(self.questions_data, question)
+            # Build the FAISS index (vector store)
+            self.faiss_index = self.build_faiss_index(self.questions_data)
 
-        if relevant_segments:
-            prompt = self.generate_prompt(question, relevant_segments)
-            openai_answer, segment_id = self.openai_api.get_answer_and_id(prompt)
+        # Use the retriever to search for the most relevant segments
+        relevant_segments = self.get_relevant_segments(self.questions_data, question, self.faiss_index)
 
+        if not relevant_segments:
+            return "I couldn't find enough relevant information to answer your question.", None, None, None
+
+            
+
+        prompt = self.generate_prompt(question, relevant_segments)
+        answer, segment_id = self.openai_api.get_answer_and_id(prompt)
+
+        if segment_id is not None:
             segment_data = next((seg for seg in relevant_segments if seg["id"] == segment_id), None)
             segment_text = segment_data["segment_text"] if segment_data else None
-            page_number = segment_data["page_number"] if segment_data else None
-
-            return openai_answer, segment_id, segment_text, page_number
+            page_number = next((segment["page_number"] for segment in self.questions_data if segment["id"] == segment_id), None)
         else:
-            return None, None, None, None
+            page_number = None
+            segment_text = None
+
+
+        return answer, segment_id, segment_text, page_number
+
+
+
+
+
+
+def main():
+    pdf_path = "/Users/eliaszobler/handout.pdf"
+    output_pdf = "/Users/eliaszobler/output.pdf"
+    question = "How are the findings of the post-project evaluation documented?"
+
+    handout_assistant = HandoutAssistant()
+    answer, segment_id, segment_text, page_number = handout_assistant.process_pdf_and_get_answer(pdf_path, question)
+
+
+    print("\n\n----------------------")
+    print(f"Answer:\n\n{answer}")
+    print("----------------------\n")
+
+    if page_number is not None:
+        print("\n-------------------------")
+        print(f"Relevant Page_Number: {page_number}")
+        print("-------------------------\n")
+
+        print("\n---------------")
+        print(f"Relevant ID: {segment_id}")
+        print("---------------\n")
+
+        print("\n============================================================")
+        print(f"Relevant Text-Segment: \n\n{segment_text}")
+        print("============================================================\n\n")
+
+        PDFHandler.highlight_text(pdf_path, output_pdf, segment_text)
+        print(f"Highlighted PDF saved to: {output_pdf}")
+    else:
+        print("No relevant segment found to highlight in the PDF.\n")
+
+if __name__ == "__main__":
+    main()
+

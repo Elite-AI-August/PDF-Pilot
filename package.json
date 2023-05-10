@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.3.0",
+    "@mui/system": "^5.3.0",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

@@ -13,7 +13,6 @@ The server provides the following API endpoints:
 The Flask app uses CORS to handle cross-origin resource sharing and communicates with the HandoutAssistant to process the PDFs and answer the questions.
 """
 
-
 from flask import Flask, request, jsonify, send_file, make_response
 from flask_cors import CORS
 from HandoutAssistant import HandoutAssistant, PDFHandler
@@ -22,9 +21,8 @@ import uuid
 from dotenv import load_dotenv
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app)
-
 
 os.makedirs('static/pdf', exist_ok=True)
 
@@ -50,7 +48,7 @@ def chatbot():
         PDFHandler.highlight_text(pdf_path, highlighted_pdf_path, segment_text)
 
         print("OpenAI API Response:", answer)
-        print("Answer: ", answer)
+        print("\nAnswer: ", answer)
         os.remove(pdf_path)
 
         return jsonify({
