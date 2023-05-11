@@ -1,7 +1,7 @@
 # PDF-Pilot
 
 
-PDF-Pilot is an AI-powered web application that allows users to upload PDFs, ask questions related to the content, and receive answers along with the relevant text highlighted in the PDF. 
+This is an AI-powered web application that allows users to upload PDFs, ask questions related to the content, and receive answers along with the relevant text highlighted in the PDF. 
 
 You can quickly find answers to your questions within large PDF documents, without having to read through the entire content.
 
@@ -327,5 +327,20 @@ def main():
     question = "Your question here"
 
     handout_assistant = HandoutAssistant()
-    answer, segment_id, segment_text, page_number = handout_assistant
-                                                            
+    answer, segment_id, segment_text, page_number = handout_assistant.answer_question(pdf_path, question)
+
+    print(f"Answer: {answer}")
+    print(f"Segment ID: {segment_id}")
+    print(f"Segment Text: {segment_text}")
+    print(f"Page Number: {page_number}")
+
+    if segment_id is not None:
+        handout_assistant.highlight_relevant_segment(pdf_path, output_pdf, segment_id, segment_text, page_number)
+    else:
+        print("No relevant segment found.")
+
+if __name__ == "__main__":
+    main()
+```
+
+With this main function, you can run the script to process the input PDF, ask a question, and receive an answer based on the relevant segments. The script will also highlight the relevant segment in the PDF, and save it as a new file with the highlighted section.
