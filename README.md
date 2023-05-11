@@ -1,7 +1,7 @@
 # PDF-Pilot
 
 
-This is an AI-powered web application that allows users to upload PDFs, ask questions related to the content, and receive answers along with the relevant text highlighted in the PDF. 
+is an AI-powered web application that allows users to upload PDFs, ask questions related to the content, and receive answers along with the relevant text highlighted in the PDF. 
 
 You can quickly find answers to your questions within large PDF documents, without having to read through the entire content.
 
