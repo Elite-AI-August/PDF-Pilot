@@ -30,7 +30,7 @@ Follow these steps to run the web application on your local machine.
 1. Clone the repository
 ```
 git clone https://github.com/admineral/PDF-Pilot
-cd PDF-Pilot
+
 ```
 
 2. Change the directory
