@@ -93,7 +93,7 @@ npm start
 
 
 
-## How to Run Locally
+## How to Run Locally in the Terminal
 
 0. navigate to PDF-Pilot/PDF-Pilot_v1/src
 
