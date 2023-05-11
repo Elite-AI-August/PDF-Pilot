@@ -78,7 +78,7 @@ cd src
 python3 server.py
 ```
 
-2. Start the React development server in the root directory:
+2. Start the React development server in the `root` directory:
 
 ```bash
 cd ..
@@ -95,7 +95,9 @@ npm start
 
 ## How to Run Locally
 
-1. Edit the `main()` function in the HandoutAssistand.py (PDF-Pilot/src/HandoutAssistant.py) script to provide the path to your input PDF file and the desired output PDF file. Also, input the question you want the Handout Assistant to answer.
+0. navigate to PDF-Pilot/PDF-Pilot_v1/src
+
+1. Edit the `main()` function in the HandoutAssistand.py  script to provide the path to your input PDF file and the desired output PDF file. Also, input the question you want the Handout Assistant to answer.
 
 ```python
 pdf_path = "/path/to/your/input.pdf"
