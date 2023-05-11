@@ -41,7 +41,7 @@ git clone https://github.com/admineral/PDF-Pilot
 cd PDF-Pilot
 ```
 
-3. Set up a virtual environment and install the Python dependencies (pip or pip3)
+3. Set up a virtual environment and install the Python dependencies (pip or pip3)/(python or python3)
 ```bash
 python -m venv venv
 source venv/bin/activate
