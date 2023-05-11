@@ -1,9 +1,8 @@
-# Welcome to PDF-Pilot!
+# PDF-Pilot
 
 
 PDF-Pilot is an AI-powered web application that allows users to upload PDFs, ask questions related to the content, and receive answers along with the relevant text highlighted in the PDF. 
-The application uses natural language processing models and techniques to process the PDF content and generate answers to user queries.
-This makes it a valuable tool for businesses and organizations that work with many handouts and often spend a lot of time going through them.
+
 
 ## Features
 
@@ -34,20 +33,25 @@ git clone https://github.com/admineral/PDF-Pilot
 cd PDF-Pilot
 ```
 
-2. Set up a virtual environment and install the Python dependencies
+2. Change the directory
+```bash
+cd PDF-Pilot
+```
+
+3. Set up a virtual environment and install the Python dependencies (pip or pip3)
 ```
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
-3. Install the JavaScript dependencies
+4. Install the JavaScript dependencies
 ```
-cd client
-yarn install
+cd PDF-Pilot
+npm install
 ```
 
-4. Set up API keys
+5. Set up API keys
 
    a. Sign up for an [AI21 Studio](https://ai21.com/studio) account to obtain an API key.
 
@@ -60,49 +64,73 @@ AI21_API_KEY=your_ai21_api_key
 OPENAI_API_KEY=your_openai_api_key
 ```
 
+
+
 ### Running the Application
 
-1. Start the Flask server in the root directory of the project:
+1. Start the Flask server in the `src` directory of the project (python or python3)
 
 ```
-flask run --port 5001
-```
-or 
-```
-python server.py
+cd src
+python3 server.py
 ```
 
-2. Start the React development server in the `client` directory:
+2. Start the React development server in the root directory:
 
 ```
 cd client
-yarn start
+npm start
 ```
 
-3. Open a browser and navigate to `http://localhost:3000`. You should see the HandoutAssistant web application.
+3. Open a browser and navigate to `http://localhost:3000`. You should see the PDF-Pilot web application.
+
 
 4. Upload a PDF, enter a question, and click "Submit" to see the AI-generated answer and the relevant text highlighted in the PDF.
 
+
+
+
+## How to Run Locally
+
+1. Edit the `main()` function in the HandoutAssistand.py (PDF-Pilot/src/HandoutAssistant.py) script to provide the path to your input PDF file and the desired output PDF file. Also, input the question you want the Handout Assistant to answer.
+
+```python
+pdf_path = "/path/to/your/input.pdf"
+output_pdf = "/path/to/your/output.pdf"
+question = "Your question here"
+```
+
+2. Run the script
+```bash
+python handout_assistant.py
+```
+
+3. The answer, relevant text, and page number will be displayed in the console. The highlighted PDF will be saved to the specified output path.
+
+
+
+
 ## How it Works
 
-HandoutAssistant utilizes several natural language processing models and techniques to process the PDF content and generate answers to user queries. The main components of the application are:
+- PDF text extraction and AI21 context segmentation
+- Context-aware question answering with OpenAI's GPT-3
+- FAISS-based efficient similarity search
+- Automatic highlighting of relevant text in the PDF
 
-- NLP: A wrapper around the Hugging Face Transformers library for question-answering tasks.
-- PDFHandler: A utility class for reading text from PDF files and highlighting relevant text.
-- AI21Segmentation: A utility class for segmenting large text files into smaller segments using the AI21 Studio API.
-- OpenAIAPI: A utility class for generating answers to questions using the OpenAI API.
-- HandoutAssistant: A class that coordinates the processing of PDFs, segmenting text, and generating answers to user queries.
 
-The application first processes the PDF content and segments it into smaller sections. When a user submits a question, the HandoutAssistant class identifies relevant segments and generates a prompt for the OpenAI API. The API then provides an answer to the question, along with the ID of the most relevant segment. The application highlights the relevant text in the PDF and displays the answer to the user.
+## How It Works in detail
 
-## Contributing
+1. **PDF text extraction**: Handout Assistant uses the PyMuPDF library (fitz) to extract text from the PDF document. The text is then stored in a data structure with the corresponding page numbers.
 
-Feel free to contribute to this project by submitting a pull request or creating an issue. Please follow the existing coding style and include tests when necessary.
+2. **Text segmentation**: The extracted text is segmented into meaningful chunks using AI21 Studio's text segmentation API. These segments are assigned unique IDs and linked to their respective page numbers.
 
-## License
+3. **Building the FAISS index**: Handout Assistant creates a FAISS index using the segmented text and OpenAI embeddings. This index is used to search for relevant text segments efficiently.
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+4. **Question answering**: When a user asks a question, Handout Assistant retrieves the most relevant text segments from the FAISS index. It then generates a prompt for OpenAI's GPT-4 engine, which uses the provided information to answer the question.
 
+5. **Highlighting and page number identification**: Once the answer is generated, Handout Assistant identifies the page number and relevant text segment in the PDF. The PyMuPDF library is then used to highlight the identified text segment in the output PDF file.
+
+With Handout Assistant, you can quickly find answers to your questions within large PDF documents, without having to read through the entire content. The tool automatically highlights the relevant information, making it easy for you to locate the answers within the PDF.
 
 
 
