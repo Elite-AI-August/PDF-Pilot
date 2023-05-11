@@ -16,7 +16,7 @@ You can quickly find answers to your questions within large PDF documents, witho
 - View the relevant text highlighted in the PDF
 
 
-<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="600px">
+<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="400px">
 
 
 ## Getting Started
