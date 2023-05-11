@@ -17,7 +17,7 @@ PDF-Pilot is an AI-powered web application that allows users to upload PDFs, ask
 
 ## Getting Started
 
-Follow these steps to run the HandoutAssistant web application on your local machine.
+Follow these steps to run the web application on your local machine.
 
 ### Prerequisites
 
