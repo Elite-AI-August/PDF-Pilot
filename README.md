@@ -107,7 +107,7 @@ question = "Your question here"
 
 2. Run the script
 ```bash
-python handout_assistant.py
+python HandoutAssistant.py
 ```
 
 3. The answer, relevant text, and page number will be displayed in the console. The highlighted PDF will be saved to the specified output path.
