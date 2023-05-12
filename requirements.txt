@@ -5,3 +5,4 @@ PyMuPDF
 openai
 requests
 python-dotenv
+langchain
