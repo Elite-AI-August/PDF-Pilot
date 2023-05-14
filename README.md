@@ -18,6 +18,10 @@ You can quickly find answers to your questions within large PDF documents, witho
 
 <img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="400px">
 
+## Contributors 
+
+- Frontend by [MrGrif0n](https://github.com/MrGrif0n)
+- Backend by [admineral](https://github.com/admineral)
 
 ## Getting Started
 
