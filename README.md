@@ -6,7 +6,7 @@ is an AI-powered web application that allows users to upload PDFs, ask questions
 You can quickly find answers to your questions within large PDF documents, without having to read through the entire content.
 
 
-
+<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="400px">
 
 ## Features
 
@@ -16,7 +16,7 @@ You can quickly find answers to your questions within large PDF documents, witho
 - View the relevant text highlighted in the PDF
 
 
-<img src="images/Pilot.gif" alt="PDF-Pilot-GIF" width="400px">
+
 
 ## Contributors 
 
