@@ -20,8 +20,8 @@ You can quickly find answers to your questions within large PDF documents, witho
 
 ## Contributors 
 
-- Frontend by [MrGrif0n](https://github.com/MrGrif0n)
-- Backend by [admineral](https://github.com/admineral)
+- Frontend by [Elite-AI-August](https://github.com/Elite-AI-August)
+- Backend by [Elite-AI-August](https://github.com/Elite-AI-August)
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ Follow these steps to run the web application on your local machine.
 
 1. Clone the repository
 ```bash
-git clone https://github.com/admineral/PDF-Pilot
+git clone https://github.com/Elite-AI-August/PDF-Pilot
 ```
 
 2. Change the directory
